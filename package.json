@@ -1,0 +1,30 @@
+{
+  "name": "beehive-proto2",
+  "version": "0.2.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev:renderer": "vite --config app/renderer/vite.config.ts",
+    "dev:main": "node app/main/build-watch.js",
+    "dev:electron": "wait-on tcp:5173 && electron .",
+    "dev": "concurrently -k -n RND,MAIN,ELEC -c cyan,magenta,yellow \"yarn dev:renderer\" \"node app/main/build-watch.js\" \"yarn dev:electron\"",
+    "build:renderer": "vite build --config app/renderer/vite.config.ts",
+    "build": "yarn build:renderer",
+    "start": "electron ."
+  },
+  "dependencies": {
+    "electron": "^31.3.0",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1"
+  },
+  "devDependencies": {
+    "@types/node": "^20.12.12",
+    "@types/react": "^18.2.66",
+    "@types/react-dom": "^18.2.23",
+    "concurrently": "^8.2.2",
+    "wait-on": "^7.2.0",
+    "typescript": "^5.4.5",
+    "vite": "^5.4.8",
+    "@vitejs/plugin-react": "^4.3.1"
+  }
+}

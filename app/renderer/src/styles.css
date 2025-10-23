@@ -1,0 +1,290 @@
+@import "./theme/tokens.css";
+
+html,
+body,
+#root {
+  height: 100%;
+  margin: 0;
+}
+body {
+  background: var(--color-bg-list);
+  color: var(--color-fg);
+  font-family: var(--font-family-list);
+}
+
+.app {
+  display: grid;
+  grid-template-rows: auto 1fr;
+  height: 100%;
+}
+
+.header {
+  background: var(--color-bg-header);
+  border-bottom: 1px solid var(--color-border);
+  padding: var(--spacing-2);
+  display: grid;
+  grid-template-columns: 220px 1fr auto;
+  gap: 10px;
+  align-items: center;
+  font-family: var(--font-family-header);
+  font-size: var(--font-size-header);
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  justify-content: var(--logo-align);
+  font-family: var(--font-family-logo);
+  font-size: var(--font-size-logo);
+  letter-spacing: 0.5px;
+}
+.controls {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+.statusbar {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  opacity: 0.8;
+}
+
+.btn {
+  padding: 6px 10px;
+  border-radius: 8px;
+  border: 1px solid #64748b55;
+  background: #111827;
+  color: #e2e8f0;
+  cursor: pointer;
+}
+.btn[disabled] {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+.input {
+  background: #0f172a;
+  color: var(--color-fg);
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  padding: 6px 8px;
+}
+select.input {
+  padding-right: 22px;
+}
+
+.list {
+  overflow: auto;
+  background: var(--color-bg-list);
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: fixed;
+}
+.table thead th {
+  position: sticky;
+  top: 0;
+  z-index: 5;
+  background: var(--color-bg-header);
+  border-bottom: 1px solid var(--color-border);
+  height: var(--row-height);
+}
+.table th,
+.table td {
+  border-bottom: 1px solid var(--color-grid);
+  padding: 4px 6px;
+  height: var(--row-height);
+}
+.table th + th,
+.table td + td {
+  border-left: 1px solid var(--color-grid);
+} /* 縦線 */
+.small {
+  font-size: calc(1rem * var(--font-small-scale));
+}
+
+.copyable,
+.copyable * {
+  user-select: text;
+  -webkit-user-select: text;
+}
+
+.badge {
+  display: inline-block;
+  padding: 2px 6px;
+  border-radius: 999px;
+  border: 1px solid var(--color-border);
+  background: #0f172a;
+  color: #cbd5e1;
+  font-size: 12px;
+}
+.ok {
+  color: var(--color-ok);
+}
+.err {
+  color: var(--color-err);
+}
+.warn {
+  color: var(--color-warn);
+}
+
+.diff del {
+  background: rgba(239, 68, 68, 0.18);
+  text-decoration: line-through;
+  border-radius: 4px;
+  padding: 0 2px;
+}
+.diff ins {
+  background: rgba(16, 185, 129, 0.18);
+  text-decoration: none;
+  border-radius: 4px;
+  padding: 0 2px;
+}
+
+.col-resizer {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 6px;
+  cursor: col-resize;
+  height: 100%;
+  background: transparent;
+}
+th:hover .col-resizer {
+  background: rgba(255, 255, 255, 0.08);
+}
+th {
+  position: relative;
+}
+
+/* ===== ここから 追加分（はみ出し防止 / sticky status）===== */
+
+/* セル内はみ出し禁止＆省略表示 */
+td,
+th {
+  overflow: hidden;
+}
+.cell {
+  display: block;
+}
+.cell-clip {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+.input.cell-input {
+  width: 100%;
+  box-sizing: border-box;
+}
+
+/* Status 列を右端に固定 */
+.col-status {
+  position: sticky;
+  right: 0;
+  background: var(--color-bg-list);
+  z-index: 3;
+}
+thead .col-status {
+  background: var(--color-bg-header);
+  z-index: 6;
+}
+
+/* Status 列の左に縦罫線（＝To欄の右側に見える線） */
+.col-status {
+  border-left: 1px solid var(--color-grid);
+}
+
+/* 入力はセル領域からはみ出さない */
+.input.cell-input {
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+/* # 列の数字は右寄せ＋右に少し余白 */
+.col-index {
+  text-align: right;
+  padding-right: 8px; /* くっつかない程度のマージン */
+}
+
+/* --- To右に縦罫線を確実に出す（Status列の左境界を描く） --- */
+/* border-collapseの影響でborderが消えることがあるので、box-shadowで内側に線を引く */
+.col-status {
+  border-left: 1px solid var(--color-grid);
+  box-shadow: -1px 0 0 var(--color-grid) inset; /* ← これが見え方の保険 */
+}
+
+/* --- Toの入力欄が列幅をはみ出さないようにする --- */
+.cell {
+  display: block;
+  width: 100%;
+  box-sizing: border-box;
+}
+.cell-clip {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+.input.cell-input {
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+  min-width: 0; /* まれにはみ出すケースの保険 */
+}
+
+/* --- #欄：ヘッダは中央、行の数字は右寄せ＋少し余白 --- */
+.table thead th.col-index {
+  text-align: center;
+  padding-right: 0;
+}
+.table tbody td.col-index {
+  text-align: right;
+  padding-right: 8px; /* 右枠にくっつかない余白 */
+}
+
+/* To 列の右端に常に線を出す（sticky重なり対策） */
+.col-to {
+  position: relative;
+}
+.col-to::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 1px;
+  height: 100%;
+  background: var(--color-grid);
+  pointer-events: none;
+  z-index: 2; /* Toセル内の内容より少し上 */
+}
+
+/* Status 列の左端にも線（保険）。stickyでも消えないよう影でも描く */
+.col-status {
+  border-left: 1px solid var(--color-grid);
+  box-shadow: -1px 0 0 var(--color-grid) inset;
+  z-index: 3; /* To::after より前面でもOK */
+}
+
+/* To 入力が列幅からはみ出さないための保険（既に入れているが念のため） */
+.cell {
+  display: block;
+  width: 100%;
+  box-sizing: border-box;
+}
+.cell-clip {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+.input.cell-input {
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+}
