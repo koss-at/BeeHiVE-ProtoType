@@ -35,6 +35,7 @@ type SerialCfg = {
   sep: string;
   start: number;
   width: number;
+  step: number;
 };
 
 // ===== diff util =====
@@ -134,7 +135,9 @@ export default function App() {
     sep: "_",
     start: 1,
     width: 3,
+    step: 1,
   });
+
   const [widths, setWidths] = useState<ColWidths>({
     path: 360,
     from: 240,
@@ -187,8 +190,11 @@ export default function App() {
         setRegex(saved.regex ?? "");
         setFlags(saved.flags ?? "");
         setRepl(saved.repl ?? "");
+        // 後方互換（step が無い旧データも 1 で復元）
         setSerial(
-          saved.serial ?? { pos: "suffix", sep: "_", start: 1, width: 3 }
+          saved.serial
+            ? { ...saved.serial, step: saved.serial.step ?? 1 }
+            : { pos: "suffix", sep: "_", start: 1, width: 3, step: 1 }
         );
         setWidths(saved.widths ?? { path: 360, from: 240, to: 240 });
       }
@@ -231,7 +237,10 @@ export default function App() {
       alert("Invalid RegExp");
       return;
     }
+
     let counter = serial.start;
+    const step =
+      Number.isFinite(serial.step) && serial.step !== 0 ? serial.step : 1;
     setRows((prev) =>
       prev.map((r) => {
         let to = r.from.replace(re, repl);
@@ -239,11 +248,15 @@ export default function App() {
           const extIdx = to.lastIndexOf(".");
           const base = extIdx > 0 ? to.slice(0, extIdx) : to;
           const ext = extIdx > 0 ? to.slice(extIdx) : "";
-          const serialStr = String(counter++).padStart(serial.width, "0");
+          // 負数は符号＋ゼロ埋め（例: -001）
+          const sign = counter < 0 ? "-" : "";
+          const absStr = String(Math.abs(counter)).padStart(serial.width, "0");
+          const serialStr = sign + absStr;
           to =
             serial.pos === "prefix"
               ? `${serialStr}${serial.sep}${to}`
               : `${base}${serial.sep}${serialStr}${ext}`;
+          counter += step;
         }
         return { ...r, to };
       })
@@ -442,6 +455,19 @@ export default function App() {
             value={serial.sep}
             onChange={(e) => setSerial((s) => ({ ...s, sep: e.target.value }))}
             title="separator"
+          />
+          <input
+            className="input"
+            style={{ width: 60 }}
+            type="number"
+            value={serial.step}
+            onChange={(e) =>
+              setSerial((s) => ({
+                ...s,
+                step: parseInt(e.target.value || "1"),
+              }))
+            }
+            title="step"
           />
 
           <button className="btn" data-action="apply" onClick={applyAll}>
