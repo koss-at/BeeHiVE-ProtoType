@@ -9,17 +9,23 @@ on:
 env:
   FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
 
+permissions:
+  contents: write
+
 jobs:
   mac:
     runs-on: macos-latest
     steps:
       - uses: actions/checkout@v4
+
       - uses: actions/setup-node@v4
         with:
           node-version: "24"
           cache: "yarn"
+
       - run: yarn install --frozen-lockfile
       - run: yarn dist:mac
+
       - uses: actions/upload-artifact@v4
         with:
           name: BeeHiVE-mac
@@ -27,18 +33,38 @@ jobs:
             dist/*.dmg
             dist/*.zip
 
+      - name: Upload mac assets to Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            dist/*.dmg
+            dist/*.zip
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
   win:
     runs-on: windows-2022
     steps:
       - uses: actions/checkout@v4
+
       - uses: actions/setup-node@v4
         with:
           node-version: "24"
           cache: "yarn"
+
       - run: yarn install --frozen-lockfile
       - run: yarn dist:win
+
       - uses: actions/upload-artifact@v4
         with:
           name: BeeHiVE-win
           path: |
             dist/*.exe
+
+      - name: Upload win assets to Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            dist/*.exe
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
