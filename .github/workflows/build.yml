@@ -1,0 +1,59 @@
+name: build-binaries
+
+on:
+  workflow_dispatch:
+  push:
+    tags:
+      - "v*.*.*"
+
+jobs:
+  mac:
+    runs-on: macos-13
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "yarn"
+
+      - name: Install deps
+        run: yarn install --frozen-lockfile
+
+      - name: Build renderer
+        run: yarn build:renderer
+
+      - name: Build mac artifacts (unsigned)
+        run: yarn dist:mac
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: BeeHiVE-mac
+          path: |
+            dist/*.dmg
+            dist/*.zip
+
+  win:
+    runs-on: windows-2022
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "yarn"
+
+      - name: Install deps
+        run: yarn install --frozen-lockfile
+
+      - name: Build renderer
+        run: yarn build:renderer
+
+      - name: Build windows artifacts (unsigned)
+        run: yarn dist:win
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: BeeHiVE-win
+          path: |
+            dist/*.exe
