@@ -1,6 +1,6 @@
 {
   "name": "beehive-proto2",
-  "version": "0.2.0",
+  "version": "2.0.1",
   "private": true,
   "type": "module",
   "main": "index.js",
@@ -19,6 +19,10 @@
   "build": {
     "appId": "com.artteknika.beehive",
     "productName": "BeeHiVE",
+    "copyright": "© 2026 ART Teknika Inc.",
+    "win": {
+      "publisherName": "ART Teknika Inc."
+    },
     "asar": true,
     "files": [
       "index.js",
