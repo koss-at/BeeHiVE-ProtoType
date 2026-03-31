@@ -6,26 +6,20 @@ on:
     tags:
       - "v*.*.*"
 
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
 jobs:
   mac:
-    runs-on: macos-13
+    runs-on: macos-latest
     steps:
       - uses: actions/checkout@v4
-
       - uses: actions/setup-node@v4
         with:
-          node-version: "20"
+          node-version: "22"
           cache: "yarn"
-
-      - name: Install deps
-        run: yarn install --frozen-lockfile
-
-      - name: Build renderer
-        run: yarn build:renderer
-
-      - name: Build mac artifacts (unsigned)
-        run: yarn dist:mac
-
+      - run: yarn install --frozen-lockfile
+      - run: yarn dist:mac
       - uses: actions/upload-artifact@v4
         with:
           name: BeeHiVE-mac
@@ -37,21 +31,12 @@ jobs:
     runs-on: windows-2022
     steps:
       - uses: actions/checkout@v4
-
       - uses: actions/setup-node@v4
         with:
-          node-version: "20"
+          node-version: "22"
           cache: "yarn"
-
-      - name: Install deps
-        run: yarn install --frozen-lockfile
-
-      - name: Build renderer
-        run: yarn build:renderer
-
-      - name: Build windows artifacts (unsigned)
-        run: yarn dist:win
-
+      - run: yarn install --frozen-lockfile
+      - run: yarn dist:win
       - uses: actions/upload-artifact@v4
         with:
           name: BeeHiVE-win
