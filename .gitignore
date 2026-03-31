@@ -1,6 +1,7 @@
 node_modules/
 dist/
-release/
+release/*
+!release/README.txt
 *.log
 .DS_Store
 .vscode/

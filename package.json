@@ -28,6 +28,12 @@
       "app/**",
       "dist/**"
     ],
+    "extraResources": [
+      {
+        "from": "release/README.txt",
+        "to": "README.txt"
+      }
+    ],
     "mac": {
       "target": [
         "dmg",
