@@ -4,6 +4,8 @@
   "private": true,
   "type": "module",
   "main": "index.js",
+  "description": "BeeHiVE — batch rename workbench",
+  "author": "ART Teknika Inc.",
   "scripts": {
     "dev:renderer": "vite --config app/renderer/vite.config.ts",
     "dev:main": "node app/main/build-watch.js",
@@ -34,7 +36,6 @@
       "identity": null
     },
     "win": {
-      "publisherName": "ART Teknika Inc.",
       "target": [
         "nsis"
       ]
